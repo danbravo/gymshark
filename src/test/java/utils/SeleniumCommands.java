@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import stepdefs.hooks.Hooks;
 
@@ -25,6 +26,19 @@ public class SeleniumCommands {
 
   public WebElement waitForAndGetVisibleElementLocated(By selector) {
     return until(ExpectedConditions.visibilityOfElementLocated(selector));
+  }
+
+  public WebElement waitForPresenceAndGetVisibleElementLocated(By selector) {
+    return until(ExpectedConditions.presenceOfElementLocated(selector));
+  }
+
+  public boolean waitForAndContainsText(By selector, String text) {
+    return until(ExpectedConditions.textToBePresentInElementLocated(selector, text));
+  }
+
+  public void selectByIndex(By selector, int index) {
+    WebElement select = waitForPresenceAndGetVisibleElementLocated(selector);
+    new Select(select).selectByIndex(index);
   }
 
   public List<WebElement> waitForAndGetAllVisibleElementsLocated(By selector) {

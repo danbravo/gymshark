@@ -8,9 +8,7 @@ import pageobjects.BagPage;
 import pageobjects.ProductDisplayPage;
 import stepdefs.hooks.Hooks;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import static pageobjects.ProductDisplayPage.openProductDisplayPage;
 
 public class ProductStepDefs {
 
@@ -23,22 +21,57 @@ public class ProductStepDefs {
 
   @Given("the user is on a product page")
   public void theUserIsOnAProductPage() {
-    driver.get("https://uk.gymshark.com/products/gymshark-speed-t-shirt-black-aw23");
+    openProductDisplayPage(driver);
+  }
+
+  @Given("there are products in the bag")
+  public void theAreProductsInTheBag() {
     productId = 39654522814667L;
-    new ProductDisplayPage().closeCookieBanner();
+    openProductDisplayPage(driver)
+            .selectSmallSize()
+            .selectAddToBag();
   }
 
   @When("adding the product to the Bag")
   public void addingTheProductToTheBag() {
-    ProductDisplayPage productDisplayPage = new ProductDisplayPage();
-    productDisplayPage.selectSmallSize();
-    productDisplayPage.selectAddToBag();
+    productId = 39654522814667L;
+    new ProductDisplayPage()
+            .selectSmallSize()
+            .selectAddToBag();
+  }
+
+  @When("user removes a product")
+  public void userRemovesAProduct() {
+    new BagPage().removeProductFromTheBag(productId);
+  }
+
+  @When("User adds quantity")
+  public void userAddsQuantity() {
+    new BagPage().addProductQuantityForProduct();
+  }
+
+  @When("User decreases quantity")
+  public void userDecreasesQuantity() {
+    new BagPage().decreaseProductQuantityForProduct();
   }
 
   @Then("the product should appear in the Bag")
   public void theProductShouldAppearInTheBag() {
-    BagPage bagPage = new BagPage();
-    List<Long> variantIds = bagPage.getVariantIdsInBag();
-    assertThat(variantIds).as("Expected product is in Bag").contains(productId);
+    new BagPage().productIsAddedToTheBag(productId);
+  }
+
+  @Then("the product is removed from the bag")
+  public void productRemovedFromTheBag() {
+    new BagPage().productBagIsEmpty();
+  }
+
+  @Then("product quantity is increased")
+  public void productQuantityIsIncreased() {
+    new BagPage().productQuantityIsIncreased();
+  }
+
+  @Then("product quantity is decreased")
+  public void productQuantityIsDecreased() {
+    new BagPage().productQuantityIsDecreased();
   }
 }
